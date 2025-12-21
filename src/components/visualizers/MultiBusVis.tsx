@@ -243,13 +243,40 @@ export default function MultiBusVis() {
                                         selectedBus === 'mix2' ? ch.mix2 :
                                             ch.mix3;
 
-                                    // Dynamic update handler
-                                    const handleUpdate = (v: number) => {
-                                        updateChannel(ch.id, selectedBus, v);
+                                    // Dynamic update handler using Pointer Events
+                                    const handlePointer = (e: React.PointerEvent<HTMLDivElement>) => {
+                                        // Only handle primary button
+                                        if (e.buttons !== 1) return;
+
+                                        const rect = e.currentTarget.getBoundingClientRect();
+                                        // Calculate height from bottom (0% is bottom, 100% is top)
+                                        const y = e.clientY - rect.top;
+                                        const height = rect.height;
+                                        // Invert Y because clientY goes down, but we want 100 at top
+                                        let percent = ((height - y) / height) * 100;
+
+                                        // Clamp
+                                        if (percent < 0) percent = 0;
+                                        if (percent > 100) percent = 100;
+
+                                        updateChannel(ch.id, selectedBus, Math.round(percent));
                                     };
 
                                     return (
-                                        <div key={ch.id} className="relative w-12 h-64 flex flex-col items-center justify-end bg-slate-900/30 rounded border border-slate-800 pb-6 group hover:bg-slate-900/50 transition-colors">
+                                        <div
+                                            key={ch.id}
+                                            className="relative w-12 h-64 flex flex-col items-center justify-end bg-slate-900/30 rounded border border-slate-800 pb-6 group hover:bg-slate-900/50 transition-colors touch-none select-none cursor-ns-resize"
+                                            onPointerDown={(e) => {
+                                                e.currentTarget.setPointerCapture(e.pointerId);
+                                                handlePointer(e);
+                                            }}
+                                            onPointerMove={(e) => {
+                                                if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                                                    handlePointer(e);
+                                                }
+                                            }}
+                                            onPointerUp={(e) => e.currentTarget.releasePointerCapture(e.pointerId)}
+                                        >
 
                                             {/* Track */}
                                             <div className="absolute top-4 bottom-8 w-1.5 bg-slate-800 rounded-full overflow-hidden">
@@ -276,16 +303,7 @@ export default function MultiBusVis() {
                                                 </div>
                                             </div>
 
-                                            {/* Invisible Range Input for Interaction */}
-                                            <div className="absolute inset-0 z-30 opacity-0">
-                                                <input
-                                                    type="range"
-                                                    min="0" max="100"
-                                                    value={val}
-                                                    onChange={(e) => handleUpdate(Number(e.target.value))}
-                                                    className="w-[200px] h-[40px] origin-bottom-left -rotate-90 translate-y-[240px] translate-x-[10px] cursor-ns-resize"
-                                                />
-                                            </div>
+                                            {/* (Invisible Input Removed - Using Pointer Events) */}
 
                                             <div className="absolute bottom-1 w-full flex justify-center overflow-visible">
                                                 <div className="text-[10px] font-bold text-slate-400 whitespace-nowrap origin-center -rotate-45 translate-y-3">{ch.label}</div>
