@@ -16,7 +16,7 @@ import {
     MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Mic2, Speaker, Server, Radio, Music2, Laptop, Cable } from 'lucide-react';
+import { Mic2, Speaker, Server, Radio, Music2, Laptop, Cable, Gamepad2, Settings } from 'lucide-react';
 
 // --- Custom Nodes ---
 
@@ -84,42 +84,91 @@ const StageBoxNode = ({ data }: NodeProps) => (
     </NodeShell>
 );
 
-// Console Node (Simplified)
+// Console Node
 const ConsoleNode = ({ data }: NodeProps) => (
     <NodeShell title="FOH Console" color="border-cyan-500/50" icon={Radio}>
-        <div className="flex gap-3">
-            {/* Left: Digital Input */}
-            <div className="flex flex-col gap-1 justify-center items-center">
-                <span className="text-[8px] text-emerald-500 font-bold uppercase text-center mb-0.5">Net In</span>
-                <div className="relative w-16 h-8 flex items-center justify-center bg-emerald-950/20 rounded border border-emerald-500/50">
-                    <Cable className="text-emerald-500 mb-0.5" size={14} />
-                    <Handle id="network-in" type="target" position={Position.Left} className="!bg-emerald-500 !w-2.5 !h-2.5 !left-[-4px]" />
+        <div className="flex gap-4">
+            {/* Left Column: Inputs */}
+            <div className="flex flex-col gap-3">
+                {/* Omni Inputs */}
+                <div className="flex flex-col gap-1">
+                    <span className="text-[8px] text-slate-500 font-bold uppercase text-center mb-0.5">Omni In</span>
+                    {[1, 2, 3, 4].map(i => (
+                        <div key={i} className="relative w-16 h-5 flex items-center justify-between px-1.5 bg-slate-950 rounded border border-slate-700">
+                            <Handle id={`omni-in-${i}`} type="target" position={Position.Left} className="!bg-slate-400 !w-2 !h-2 !left-[-4px]" />
+                            <span className="text-[8px] text-slate-400 font-mono">In {i}</span>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Net In */}
+                <div className="flex flex-col gap-1 items-center">
+                    <span className="text-[8px] text-emerald-500 font-bold uppercase text-center mb-0.5">Dante In</span>
+                    <div className="relative w-16 h-6 flex items-center justify-center bg-emerald-950/20 rounded border border-emerald-500/50">
+                        <Cable className="text-emerald-500" size={12} />
+                        <Handle id="network-in" type="target" position={Position.Left} className="!bg-emerald-500 !w-2.5 !h-2.5 !left-[-4px]" />
+                    </div>
                 </div>
             </div>
 
             <div className="w-[1px] bg-slate-800" />
 
-            {/* Right: Outputs */}
+            {/* Right Column: Outputs */}
             <div className="flex flex-col gap-1.5 items-center">
-                <span className="text-[8px] text-slate-500 uppercase font-bold mb-0.5">Bus Out</span>
+                <span className="text-[8px] text-slate-500 uppercase font-bold mb-0.5">Outputs</span>
 
-                {/* Main */}
-                <div className="relative w-20 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
-                    <span className="text-[8px] text-white font-bold">Main L/R</span>
-                    <Handle id="main-lr" type="source" position={Position.Right} className="!bg-red-500 !w-2 !h-2 !right-[-4px]" />
+                {/* Main L/R */}
+                <div className="flex gap-1">
+                    <div className="relative w-12 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
+                        <span className="text-[8px] text-white font-bold">L</span>
+                        <Handle id="main-l" type="source" position={Position.Right} className="!bg-red-500 !w-2 !h-2 !right-[-4px]" />
+                    </div>
+                    <div className="relative w-12 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
+                        <span className="text-[8px] text-white font-bold">R</span>
+                        <Handle id="main-r" type="source" position={Position.Right} className="!bg-red-500 !w-2 !h-2 !right-[-4px]" />
+                    </div>
                 </div>
+                <div className="text-[7px] text-slate-600 font-bold mb-1">MAIN</div>
 
-                {/* Matrix/Aux for Recording */}
-                <div className="relative w-20 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
-                    <span className="text-[8px] text-pink-400 font-bold">Rec Bus</span>
-                    <Handle id="rec-out" type="source" position={Position.Right} className="!bg-pink-500 !w-2 !h-2 !right-[-4px]" />
+                {/* Mix Outputs */}
+                <div className="relative w-28 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
+                    <span className="text-[8px] text-cyan-400 font-bold">Mix 1: Zoom</span>
+                    <Handle id="mix-1" type="source" position={Position.Right} className="!bg-cyan-500 !w-2 !h-2 !right-[-4px]" />
                 </div>
+                <div className="relative w-28 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
+                    <span className="text-[8px] text-pink-400 font-bold">Mix 2: Rec</span>
+                    <Handle id="mix-2" type="source" position={Position.Right} className="!bg-pink-500 !w-2 !h-2 !right-[-4px]" />
+                </div>
+                <div className="relative w-28 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
+                    <span className="text-[8px] text-purple-400 font-bold">Mix 3: Stream</span>
+                    <Handle id="mix-3" type="source" position={Position.Right} className="!bg-purple-500 !w-2 !h-2 !right-[-4px]" />
+                </div>
+            </div>
+        </div>
+    </NodeShell>
+);
 
-                {/* Aux for Zoom */}
-                <div className="relative w-20 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
-                    <span className="text-[8px] text-cyan-400 font-bold">Mix 1</span>
-                    <Handle id="aux-zoom" type="source" position={Position.Right} className="!bg-cyan-500 !w-2 !h-2 !right-[-4px]" />
+// Audio Interface Node
+const AudioInterfaceNode = ({ data }: NodeProps) => (
+    <NodeShell title="Audio I/F" color="border-orange-500/50" icon={Settings}>
+        <div className="flex gap-3 items-center">
+            {/* Analog In (From Console) */}
+            <div className="flex flex-col gap-1">
+                <div className="relative w-16 h-5 flex items-center px-1.5 bg-slate-950 rounded border border-slate-700">
+                    <Handle id="analog-in-1" type="target" position={Position.Left} className="!bg-cyan-500 !w-2 !h-2 !left-[-4px]" />
+                    <span className="text-[8px] text-slate-400 ml-1">In 1</span>
                 </div>
+                <div className="relative w-16 h-5 flex items-center px-1.5 bg-slate-950 rounded border border-slate-700">
+                    <Handle id="analog-in-2" type="target" position={Position.Left} className="!bg-cyan-500 !w-2 !h-2 !left-[-4px]" />
+                    <span className="text-[8px] text-slate-400 ml-1">In 2</span>
+                </div>
+            </div>
+
+            {/* USB Connection */}
+            <div className="relative w-10 h-8 flex items-center justify-center bg-orange-950/20 rounded border border-orange-500/50">
+                <Gamepad2 className="text-orange-500 mb-0.5" size={14} />
+                <span className="absolute -bottom-2 text-[7px] text-orange-400 font-bold">USB</span>
+                <Handle id="usb" type="source" position={Position.Right} className="!bg-orange-500 !w-2.5 !h-2.5 !right-[-4px] rounded-none rotate-45" />
             </div>
         </div>
     </NodeShell>
@@ -129,12 +178,13 @@ const ConsoleNode = ({ data }: NodeProps) => (
 const ZoomPCNode = ({ data }: NodeProps) => (
     <NodeShell title="Zoom PC" color="border-blue-500/50" icon={Laptop}>
         <div className="flex flex-col items-center w-24">
-            <div className="relative w-full h-6 bg-slate-950 rounded border border-slate-800 flex items-center gap-1.5 mb-1 px-1.5">
-                <Handle type="target" position={Position.Left} className="!bg-cyan-500 !w-2.5 !h-2.5 !left-[-6px]" />
-                <span className="text-[9px] text-cyan-400 font-bold">In 1/2</span>
+            <div className="relative w-full h-8 bg-slate-950 rounded border border-slate-800 flex items-center gap-1.5 mb-1 px-1.5 justify-center">
+                <Handle type="target" position={Position.Left} className="!bg-orange-500 !w-2.5 !h-2.5 !left-[-6px] rounded-none rotate-45" />
+                <Gamepad2 size={12} className="text-orange-500" />
+                <span className="text-[9px] text-blue-200 font-bold">USB Audio</span>
             </div>
             <div className="text-[8px] text-slate-500 text-center leading-tight">
-                USB IF
+                Receiving Mix 1
             </div>
         </div>
     </NodeShell>
@@ -142,13 +192,13 @@ const ZoomPCNode = ({ data }: NodeProps) => (
 
 // Speaker Node
 const SpeakerNode = ({ data }: NodeProps) => (
-    <NodeShell title="Main SP" color="border-red-500/50" icon={Speaker}>
+    <NodeShell title={`Main SP (${data.label || 'L'})`} color="border-red-500/50" icon={Speaker}>
         <div className="flex flex-col items-center w-24">
             <div className="relative w-full h-6 bg-slate-950 rounded border border-slate-800 flex items-center gap-1.5 mb-1 px-1.5 justify-center">
                 <Handle type="target" position={Position.Left} className="!bg-red-500 !w-2.5 !h-2.5 !left-[-6px]" />
-                <span className="text-[9px] text-red-400 font-bold">In L/R</span>
+                <span className="text-[9px] text-red-400 font-bold">Input</span>
             </div>
-            <div className="w-8 h-12 bg-slate-900 rounded border border-slate-800 flex flex-col items-center justify-center gap-0.5">
+            <div className="w-8 h-12 bg-slate-900 rounded border border-slate-800 flex flex-col items-center justify-center gap-0.5 shadow-inner">
                 <div className="w-5 h-5 rounded-full border border-slate-800 bg-black" />
                 <div className="w-1.5 h-1.5 rounded-full border border-slate-800 bg-black" />
             </div>
@@ -162,6 +212,7 @@ const nodeTypes = {
     stagebox: StageBoxNode,
     console: ConsoleNode,
     speaker: SpeakerNode,
+    audioif: AudioInterfaceNode,
     zoompc: ZoomPCNode,
 };
 
@@ -171,16 +222,27 @@ const initialNodes = [
     { id: 'mic-2', type: 'mic', position: { x: 50, y: 150 }, data: { label: 'Mic 2 (Guest A)' } },
     { id: 'mic-3', type: 'mic', position: { x: 50, y: 250 }, data: { label: 'Mic 3 (Guest B)' } },
     { id: 'inst-bgm', type: 'instrument', position: { x: 50, y: 350 }, data: { label: 'BGM (iPad)' } },
+    // Extra sources for Omni In
+    { id: 'extra-mic', type: 'mic', position: { x: 50, y: 450 }, data: { label: 'Talkback Mic' } },
+
 
     // --- COLUMN 2: STAGE BOX ---
-    { id: 'stagebox', type: 'stagebox', position: { x: 300, y: 50 }, data: {} },
+    { id: 'stagebox', type: 'stagebox', position: { x: 250, y: 50 }, data: {} },
 
     // --- COLUMN 3: CONSOLE ---
-    { id: 'console', type: 'console', position: { x: 600, y: 150 }, data: {} },
+    { id: 'console', type: 'console', position: { x: 550, y: 100 }, data: {} },
 
-    // --- COLUMN 4: DESTINATIONS ---
-    { id: 'speakers', type: 'speaker', position: { x: 950, y: 100 }, data: {} },
-    { id: 'zoom-pc', type: 'zoompc', position: { x: 950, y: 300 }, data: {} },
+    // --- COLUMN 4: DESTINATIONS & PERIPHERALS ---
+
+    // Speakers
+    { id: 'sp-l', type: 'speaker', position: { x: 950, y: 50 }, data: { label: 'L' } },
+    { id: 'sp-r', type: 'speaker', position: { x: 950, y: 200 }, data: { label: 'R' } },
+
+    // Audio Interface
+    { id: 'audio-if', type: 'audioif', position: { x: 800, y: 350 }, data: {} },
+
+    // Zoom PC
+    { id: 'zoom-pc', type: 'zoompc', position: { x: 980, y: 350 }, data: {} },
 ];
 
 export default function PlaygroundVis() {
