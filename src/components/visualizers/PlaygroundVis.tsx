@@ -16,7 +16,7 @@ import {
     MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Mic2, Speaker, Server, Radio, Music2, Laptop, Cable, Gamepad2, Settings } from 'lucide-react';
+import { Mic2, Speaker, Server, Radio, Music2, Laptop, Cable, Gamepad2, Settings, Monitor, Camera } from 'lucide-react';
 
 // --- Custom Nodes ---
 
@@ -71,14 +71,27 @@ const StageBoxNode = ({ data }: NodeProps) => (
 
             <div className="w-[1px] bg-slate-800" />
 
-            {/* Right: Digital Output */}
-            <div className="flex flex-col gap-1 justify-center items-center mix-blend-screen">
+            {/* Middle: Digital Network */}
+            <div className="flex flex-col gap-1 justify-center items-center">
                 <span className="text-[8px] text-emerald-500 font-bold uppercase text-center mb-0.5">Network</span>
                 <div className="relative w-16 h-8 flex items-center justify-center bg-emerald-950/20 rounded border border-emerald-500/50">
                     <Cable className="text-emerald-500 mb-0.5" size={14} />
                     <span className="absolute -bottom-2 text-[7px] text-emerald-400 font-bold whitespace-nowrap">Dante</span>
                     <Handle id="network-out" type="source" position={Position.Right} className="!bg-emerald-500 !w-2.5 !h-2.5 !right-[-4px]" />
                 </div>
+            </div>
+
+            <div className="w-[1px] bg-slate-800" />
+
+            {/* Right: Analog Outputs */}
+            <div className="flex flex-col gap-1">
+                <span className="text-[8px] text-slate-500 font-bold uppercase text-center mb-0.5">Out (XLR)</span>
+                {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                    <div key={i} className="relative w-16 h-5 flex items-center justify-between px-1.5 bg-slate-950 rounded border border-slate-700">
+                        <span className="text-[8px] text-slate-400 font-mono">Out {i}</span>
+                        <Handle id={`out-${i}`} type="source" position={Position.Right} className="!bg-slate-400 !w-2 !h-2 !right-[-4px]" />
+                    </div>
+                ))}
             </div>
         </div>
     </NodeShell>
@@ -117,18 +130,17 @@ const ConsoleNode = ({ data }: NodeProps) => (
             <div className="flex flex-col gap-1.5 items-center">
                 <span className="text-[8px] text-slate-500 uppercase font-bold mb-0.5">Outputs</span>
 
-                {/* Main L/R */}
-                <div className="flex gap-1">
-                    <div className="relative w-12 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
-                        <span className="text-[8px] text-white font-bold">L</span>
+                {/* Main L/R (Vertical Stack) */}
+                <div className="flex flex-col gap-1 mb-1">
+                    <div className="relative w-16 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
+                        <span className="text-[8px] text-white font-bold">Main L</span>
                         <Handle id="main-l" type="source" position={Position.Right} className="!bg-red-500 !w-2 !h-2 !right-[-4px]" />
                     </div>
-                    <div className="relative w-12 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
-                        <span className="text-[8px] text-white font-bold">R</span>
+                    <div className="relative w-16 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
+                        <span className="text-[8px] text-white font-bold">Main R</span>
                         <Handle id="main-r" type="source" position={Position.Right} className="!bg-red-500 !w-2 !h-2 !right-[-4px]" />
                     </div>
                 </div>
-                <div className="text-[7px] text-slate-600 font-bold mb-1">MAIN</div>
 
                 {/* Mix Outputs */}
                 <div className="relative w-28 h-6 bg-slate-950 rounded border border-slate-700 flex items-center justify-between px-1.5">
@@ -190,6 +202,37 @@ const ZoomPCNode = ({ data }: NodeProps) => (
     </NodeShell>
 );
 
+// Video Switcher Node
+const VideoSwitcherNode = ({ data }: NodeProps) => (
+    <NodeShell title="Video Switcher" color="border-purple-500/50" icon={Monitor}>
+        <div className="flex flex-col items-center w-24">
+            <div className="relative w-full h-6 bg-slate-950 rounded border border-slate-800 flex items-center gap-1.5 mb-1 px-1.5 justify-center">
+                <Handle type="target" position={Position.Left} className="!bg-purple-500 !w-2.5 !h-2.5 !left-[-6px]" />
+                <span className="text-[9px] text-purple-400 font-bold">Audio In</span>
+            </div>
+            <div className="text-[8px] text-slate-500 text-center leading-tight">
+                To Stream
+            </div>
+        </div>
+    </NodeShell>
+);
+
+// Camera Node
+const CameraNode = ({ data }: NodeProps) => (
+    <NodeShell title="Camera" color="border-pink-500/50" icon={Camera}>
+        <div className="flex flex-col items-center w-24">
+            <div className="relative w-full h-6 bg-slate-950 rounded border border-slate-800 flex items-center gap-1.5 mb-1 px-1.5 justify-center">
+                <Handle type="target" position={Position.Left} className="!bg-pink-500 !w-2.5 !h-2.5 !left-[-6px]" />
+                <span className="text-[9px] text-pink-400 font-bold">Mic In</span>
+            </div>
+            <div className="text-[8px] text-slate-500 text-center leading-tight">
+                Recording
+            </div>
+        </div>
+    </NodeShell>
+);
+
+
 // Speaker Node
 const SpeakerNode = ({ data }: NodeProps) => (
     <NodeShell title={`Main SP (${data.label || 'L'})`} color="border-red-500/50" icon={Speaker}>
@@ -214,6 +257,8 @@ const nodeTypes = {
     speaker: SpeakerNode,
     audioif: AudioInterfaceNode,
     zoompc: ZoomPCNode,
+    switcher: VideoSwitcherNode,
+    camera: CameraNode,
 };
 
 const initialNodes = [
@@ -230,7 +275,7 @@ const initialNodes = [
     { id: 'stagebox', type: 'stagebox', position: { x: 250, y: 50 }, data: {} },
 
     // --- COLUMN 3: CONSOLE ---
-    { id: 'console', type: 'console', position: { x: 550, y: 100 }, data: {} },
+    { id: 'console', type: 'console', position: { x: 600, y: 100 }, data: {} },
 
     // --- COLUMN 4: DESTINATIONS & PERIPHERALS ---
 
@@ -238,11 +283,13 @@ const initialNodes = [
     { id: 'sp-l', type: 'speaker', position: { x: 950, y: 50 }, data: { label: 'L' } },
     { id: 'sp-r', type: 'speaker', position: { x: 950, y: 200 }, data: { label: 'R' } },
 
-    // Audio Interface
-    { id: 'audio-if', type: 'audioif', position: { x: 800, y: 350 }, data: {} },
+    // Audio Interface -> Zoom
+    { id: 'audio-if', type: 'audioif', position: { x: 900, y: 350 }, data: {} },
+    { id: 'zoom-pc', type: 'zoompc', position: { x: 1080, y: 350 }, data: {} },
 
-    // Zoom PC
-    { id: 'zoom-pc', type: 'zoompc', position: { x: 980, y: 350 }, data: {} },
+    // New Destinations
+    { id: 'camera', type: 'camera', position: { x: 900, y: 460 }, data: {} },
+    { id: 'switcher', type: 'switcher', position: { x: 900, y: 550 }, data: {} },
 ];
 
 export default function PlaygroundVis() {
