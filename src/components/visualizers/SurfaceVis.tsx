@@ -6,10 +6,10 @@ import { clsx } from 'clsx';
 
 // Simulated Data
 const initialChannels = [
-    { id: 1, label: 'CH 1', name: 'Mic 1', type: 'mic', gain: 30, eq: { low: 2, mid: -3, high: 5 }, comp: true },
-    { id: 2, label: 'CH 2', name: 'Mic 2', type: 'mic', gain: 20, eq: { low: 0, mid: 0, high: 2 }, comp: false },
-    { id: 3, label: 'CH 3', name: 'BGM L', type: 'line', gain: 10, eq: { low: 4, mid: 0, high: 0 }, comp: false },
-    { id: 4, label: 'CH 4', name: 'BGM R', type: 'line', gain: 10, eq: { low: 4, mid: 0, high: 0 }, comp: false },
+    { id: 1, label: 'CH 1', name: 'Mic 1', type: 'mic', gain: 30, phantom: true, eq: { low: 2, mid: -3, high: 5 }, comp: true },
+    { id: 2, label: 'CH 2', name: 'Mic 2', type: 'mic', gain: 20, phantom: false, eq: { low: 0, mid: 0, high: 2 }, comp: false },
+    { id: 3, label: 'CH 3', name: 'BGM L', type: 'line', gain: 10, phantom: false, eq: { low: 4, mid: 0, high: 0 }, comp: false },
+    { id: 4, label: 'CH 4', name: 'BGM R', type: 'line', gain: 10, phantom: false, eq: { low: 4, mid: 0, high: 0 }, comp: false },
 ];
 
 export default function SurfaceVis() {
@@ -23,6 +23,18 @@ export default function SurfaceVis() {
     const handleGainChange = (newGain: number) => {
         setChannels(prev => prev.map(ch =>
             ch.id === selectedChId ? { ...ch, gain: newGain } : ch
+        ));
+    };
+
+    const togglePhantom = () => {
+        setChannels(prev => prev.map(ch =>
+            ch.id === selectedChId ? { ...ch, phantom: !ch.phantom } : ch
+        ));
+    };
+
+    const handleEqChange = (band: 'low' | 'mid' | 'high', val: number) => {
+        setChannels(prev => prev.map(ch =>
+            ch.id === selectedChId ? { ...ch, eq: { ...ch.eq, [band]: val } } : ch
         ));
     };
 
@@ -69,8 +81,19 @@ export default function SurfaceVis() {
                         </div>
 
                         {/* 48V / Phase */}
+                        {/* 48V / Phase */}
                         <div className="flex gap-2 mt-2 w-full justify-center">
-                            <div className="text-[9px] bg-slate-700 text-slate-400 px-1 rounded border border-slate-600">+48V</div>
+                            <button
+                                onClick={togglePhantom}
+                                className={clsx(
+                                    "text-[9px] px-1 rounded border transition-colors shadow-sm active:scale-95",
+                                    selectedCh.phantom
+                                        ? "bg-red-600 text-white border-red-400 shadow-[0_0_8px_rgba(220,38,38,0.6)]"
+                                        : "bg-slate-700 text-slate-400 border-slate-600 hover:bg-slate-600"
+                                )}
+                            >
+                                +48V
+                            </button>
                             <div className="text-[9px] bg-slate-700 text-slate-400 px-1 rounded border border-slate-600">Ø</div>
                         </div>
                     </div>
@@ -101,17 +124,54 @@ export default function SurfaceVis() {
                         {/* Center dB Line */}
                         <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-green-500/20"></div>
 
-                        {/* EQ Nodes */}
+                        {/* EQ Nodes with Inputs */}
                         <div className="absolute w-6 h-6 rounded-full bg-slate-600 text-[9px] flex items-center justify-center text-white font-bold border border-slate-400"
                             style={{ left: '10%', top: '50%' }}>HPF</div>
-                        <div className="absolute w-6 h-6 rounded-full bg-slate-600 text-[9px] flex items-center justify-center text-white font-bold border border-slate-400"
-                            style={{ left: '30%', top: `${50 - selectedCh.eq.low * 3}%` }}>L</div>
-                        <div className="absolute w-6 h-6 rounded-full bg-slate-600 text-[9px] flex items-center justify-center text-white font-bold border border-slate-400"
-                            style={{ left: '50%', top: `${50 - selectedCh.eq.mid * 3}%` }}>LM</div>
-                        <div className="absolute w-6 h-6 rounded-full bg-slate-600 text-[9px] flex items-center justify-center text-white font-bold border border-slate-400"
+
+                        {/* LOW Node */}
+                        <div className="absolute w-6 h-6 rounded-full bg-emerald-600 text-[9px] flex items-center justify-center text-white font-bold border border-emerald-400 z-10 hover:scale-110 transition-transform cursor-pointer"
+                            style={{ left: '30%', top: `${50 - selectedCh.eq.low * 3}%` }}>
+                            L
+                            <input
+                                type="range"
+                                min="-10" max="10"
+                                value={selectedCh.eq.low}
+                                onChange={(e) => handleEqChange('low', Number(e.target.value))}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-ns-resize"
+                                title="Low Gain"
+                            />
+                        </div>
+
+                        {/* MID Node */}
+                        <div className="absolute w-6 h-6 rounded-full bg-emerald-600 text-[9px] flex items-center justify-center text-white font-bold border border-emerald-400 z-10 hover:scale-110 transition-transform cursor-pointer"
+                            style={{ left: '50%', top: `${50 - selectedCh.eq.mid * 3}%` }}>
+                            M
+                            <input
+                                type="range"
+                                min="-10" max="10"
+                                value={selectedCh.eq.mid}
+                                onChange={(e) => handleEqChange('mid', Number(e.target.value))}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-ns-resize"
+                                title="Mid Gain"
+                            />
+                        </div>
+
+                        {/* HIGH Node */}
+                        <div className="absolute w-6 h-6 rounded-full bg-emerald-600 text-[9px] flex items-center justify-center text-white font-bold border border-emerald-400 z-10 hover:scale-110 transition-transform cursor-pointer"
                             style={{ left: '70%', top: '50%' }}>HM</div>
-                        <div className="absolute w-6 h-6 rounded-full bg-slate-600 text-[9px] flex items-center justify-center text-white font-bold border border-slate-400"
-                            style={{ left: '90%', top: `${50 - selectedCh.eq.high * 3}%` }}>H</div>
+
+                        <div className="absolute w-6 h-6 rounded-full bg-emerald-600 text-[9px] flex items-center justify-center text-white font-bold border border-emerald-400 z-10 hover:scale-110 transition-transform cursor-pointer"
+                            style={{ left: '90%', top: `${50 - selectedCh.eq.high * 3}%` }}>
+                            H
+                            <input
+                                type="range"
+                                min="-10" max="10"
+                                value={selectedCh.eq.high}
+                                onChange={(e) => handleEqChange('high', Number(e.target.value))}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-ns-resize"
+                                title="High Gain"
+                            />
+                        </div>
 
                         {/* Simple Line Visualization (SVG) */}
                         <svg className="absolute inset-0 w-full h-full pointer-events-none stroke-green-500 stroke-[2px] fill-none">

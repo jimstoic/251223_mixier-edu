@@ -64,7 +64,12 @@ export default function DigitalPatchVis() {
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
     const onConnect = useCallback((params: Connection) => {
-        setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: '#6366f1', strokeWidth: 2 } }, eds));
+        setEdges((eds) => {
+            // Logic: One Channel Strip (Target) can only accept ONE input.
+            // If a connection to this target already exists, remove it (replace behavior).
+            const filtered = eds.filter(e => e.target !== params.target);
+            return addEdge({ ...params, animated: true, style: { stroke: '#6366f1', strokeWidth: 2 } }, filtered);
+        });
     }, [setEdges]);
 
     return (
