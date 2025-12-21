@@ -57,7 +57,7 @@ const InstrumentNode = ({ data }: NodeProps) => (
 // Stage Box Node
 const StageBoxNode = ({ data }: NodeProps) => (
     <NodeShell title="Stage Box" color="border-slate-500" icon={Server}>
-        <div className="flex gap-3">
+        <div className="flex gap-4">
             {/* Left: Analog Inputs */}
             <div className="flex flex-col gap-1">
                 <span className="text-[8px] text-slate-500 font-bold uppercase text-center mb-0.5">In (XLR)</span>
@@ -71,27 +71,28 @@ const StageBoxNode = ({ data }: NodeProps) => (
 
             <div className="w-[1px] bg-slate-800" />
 
-            {/* Middle: Digital Network */}
-            <div className="flex flex-col gap-1 justify-center items-center">
-                <span className="text-[8px] text-emerald-500 font-bold uppercase text-center mb-0.5">Network</span>
-                <div className="relative w-16 h-8 flex items-center justify-center bg-emerald-950/20 rounded border border-emerald-500/50">
-                    <Cable className="text-emerald-500 mb-0.5" size={14} />
-                    <span className="absolute -bottom-2 text-[7px] text-emerald-400 font-bold whitespace-nowrap">Dante</span>
-                    <Handle id="network-out" type="source" position={Position.Right} className="!bg-emerald-500 !w-2.5 !h-2.5 !right-[-4px]" />
+            {/* Right: Outputs & Network */}
+            <div className="flex flex-col gap-4">
+                {/* Analog Outputs */}
+                <div className="flex flex-col gap-1">
+                    <span className="text-[8px] text-slate-500 font-bold uppercase text-center mb-0.5">Out (XLR)</span>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                        <div key={i} className="relative w-16 h-5 flex items-center justify-between px-1.5 bg-slate-950 rounded border border-slate-700">
+                            <span className="text-[8px] text-slate-400 font-mono">Out {i}</span>
+                            <Handle id={`out-${i}`} type="source" position={Position.Right} className="!bg-slate-400 !w-2 !h-2 !right-[-4px]" />
+                        </div>
+                    ))}
                 </div>
-            </div>
 
-            <div className="w-[1px] bg-slate-800" />
-
-            {/* Right: Analog Outputs */}
-            <div className="flex flex-col gap-1">
-                <span className="text-[8px] text-slate-500 font-bold uppercase text-center mb-0.5">Out (XLR)</span>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-                    <div key={i} className="relative w-16 h-5 flex items-center justify-between px-1.5 bg-slate-950 rounded border border-slate-700">
-                        <span className="text-[8px] text-slate-400 font-mono">Out {i}</span>
-                        <Handle id={`out-${i}`} type="source" position={Position.Right} className="!bg-slate-400 !w-2 !h-2 !right-[-4px]" />
+                {/* Network (Moved below Outputs) */}
+                <div className="flex flex-col gap-1 justify-center items-center pt-2 border-t border-slate-800">
+                    <span className="text-[8px] text-emerald-500 font-bold uppercase text-center mb-0.5">Network</span>
+                    <div className="relative w-16 h-8 flex items-center justify-center bg-emerald-950/20 rounded border border-emerald-500/50">
+                        <Cable className="text-emerald-500 mb-0.5" size={14} />
+                        <span className="absolute -bottom-2 text-[7px] text-emerald-400 font-bold whitespace-nowrap">Dante</span>
+                        <Handle id="network-out" type="source" position={Position.Right} className="!bg-emerald-500 !w-2.5 !h-2.5 !right-[-4px]" />
                     </div>
-                ))}
+                </div>
             </div>
         </div>
     </NodeShell>
