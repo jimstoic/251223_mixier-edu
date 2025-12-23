@@ -101,6 +101,49 @@ export default function BusLessonPage() {
 
             <section className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800/60 backdrop-blur-sm">
                 <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold text-orange-500 flex items-center gap-2">
+                        Task 1.8: Pre vs Post (タイミングの罠)
+                    </h2>
+                    <div className="px-3 py-1 bg-orange-500/10 text-orange-500 text-sm font-medium rounded-full border border-orange-500/20">
+                        必須
+                    </div>
+                </div>
+                <p className="mb-4 text-slate-300 max-w-2xl leading-relaxed">
+                    バスに送る「タイミング」も重要です。<br />
+                    <strong>Pre Fader</strong>（フェーダーの前）と <strong>Post Fader</strong>（フェーダーの後）。<br />
+                    このスイッチ一つで、事故になるか、プロの仕事になるかが決まります。
+                </p>
+
+                <div className="mb-8 p-4 bg-slate-950/50 border border-orange-900/30 rounded-lg text-sm text-slate-400">
+                    <ul className="space-y-4 list-none text-slate-300">
+                        <li className="flex items-start gap-3">
+                            <span className="font-bold text-emerald-500 bg-emerald-950/30 px-2 py-0.5 rounded border border-emerald-500/30 shrink-0">PRE</span>
+                            <span>
+                                <strong>モニター用 (演者へ返す音)</strong><br />
+                                本番中にメインフェーダーを動かしても、演者のモニター音量は変わりません。<br />
+                                <span className="text-xs text-slate-500">※ これがPostだと、メインを下げた瞬間モニターも聞こえなくなり、演者が混乱します。</span>
+                            </span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="font-bold text-orange-500 bg-orange-950/30 px-2 py-0.5 rounded border border-orange-500/30 shrink-0">POST</span>
+                            <span>
+                                <strong>エフェクト / 配信 / 録音用</strong><br />
+                                メインフェーダーを下げれば、リバーブや配信の音も一緒に消えます。<br />
+                                <span className="text-xs text-slate-500">※ 自然なフェードアウトには必須です。</span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+                <p className="text-sm text-slate-400 mb-4">
+                    下のシミュレーターで、<strong>Main Faderを動かした時</strong>に、Monitor Out（右のメーター）がどう反応するか、Pre/Postを切り替えて実験してください。
+                </p>
+
+                <PrePostVis />
+            </section>
+
+            <section className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800/60 backdrop-blur-sm">
+                <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-semibold text-red-400 flex items-center gap-2">
                         Task 2: "Mix Minus" (マイナスワン) の謎
                     </h2>
