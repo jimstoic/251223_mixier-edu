@@ -7,13 +7,13 @@ import { Settings2, Sliders, Monitor, Youtube, Mic } from 'lucide-react';
 
 // Extended Channel Data
 const initialChannels = [
-    { id: 1, label: 'MC', color: 'text-pink-400', bg: 'bg-pink-500', masterOn: true, mix1: 0, mix2: 100, mix3: 100 },
-    { id: 2, label: 'Guest A', color: 'text-cyan-400', bg: 'bg-cyan-500', masterOn: true, mix1: 100, mix2: 100, mix3: 100 },
-    { id: 3, label: 'Guest B', color: 'text-cyan-400', bg: 'bg-cyan-500', masterOn: true, mix1: 100, mix2: 100, mix3: 100 },
-    { id: 4, label: 'Zoom L', color: 'text-blue-400', bg: 'bg-blue-500', masterOn: true, mix1: 0, mix2: 100, mix3: 100 },
-    { id: 5, label: 'Zoom R', color: 'text-blue-400', bg: 'bg-blue-500', masterOn: true, mix1: 0, mix2: 100, mix3: 100 },
-    { id: 6, label: 'BGM L', color: 'text-yellow-400', bg: 'bg-yellow-500', masterOn: true, mix1: 40, mix2: 100, mix3: 100 },
-    { id: 7, label: 'BGM R', color: 'text-yellow-400', bg: 'bg-yellow-500', masterOn: true, mix1: 40, mix2: 100, mix3: 100 },
+    { id: 1, label: 'MC', color: 'text-pink-400', bg: 'bg-pink-500', masterOn: true, mix1: 0, mix1Pre: true, mix2: 100, mix2Pre: false, mix3: 100, mix3Pre: false },
+    { id: 2, label: 'Guest A', color: 'text-cyan-400', bg: 'bg-cyan-500', masterOn: true, mix1: 100, mix1Pre: true, mix2: 100, mix2Pre: false, mix3: 100, mix3Pre: false },
+    { id: 3, label: 'Guest B', color: 'text-cyan-400', bg: 'bg-cyan-500', masterOn: true, mix1: 100, mix1Pre: true, mix2: 100, mix2Pre: false, mix3: 100, mix3Pre: false },
+    { id: 4, label: 'Zoom L', color: 'text-blue-400', bg: 'bg-blue-500', masterOn: true, mix1: 0, mix1Pre: true, mix2: 100, mix2Pre: false, mix3: 100, mix3Pre: false },
+    { id: 5, label: 'Zoom R', color: 'text-blue-400', bg: 'bg-blue-500', masterOn: true, mix1: 0, mix1Pre: true, mix2: 100, mix2Pre: false, mix3: 100, mix3Pre: false },
+    { id: 6, label: 'BGM L', color: 'text-yellow-400', bg: 'bg-yellow-500', masterOn: true, mix1: 40, mix1Pre: true, mix2: 100, mix2Pre: false, mix3: 100, mix3Pre: false },
+    { id: 7, label: 'BGM R', color: 'text-yellow-400', bg: 'bg-yellow-500', masterOn: true, mix1: 40, mix1Pre: true, mix2: 100, mix2Pre: false, mix3: 100, mix3Pre: false },
 ];
 
 export default function MultiBusVis() {
@@ -126,7 +126,20 @@ export default function MultiBusVis() {
                                         onChange={(e) => updateChannel(selectedCh.id, 'mix1', Number(e.target.value))}
                                         className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer mb-2"
                                     />
-                                    <div className="text-emerald-500 font-mono text-xs">{selectedCh.mix1}</div>
+                                    <div className="flex gap-2 items-center mb-1">
+                                        <div className="text-emerald-500 font-mono text-xs">{selectedCh.mix1}</div>
+                                        <button
+                                            onClick={() => updateChannel(selectedCh.id, 'mix1Pre', !selectedCh.mix1Pre)}
+                                            className={clsx(
+                                                "px-1.5 py-0.5 text-[9px] font-bold rounded border transition-colors",
+                                                selectedCh.mix1Pre
+                                                    ? "bg-amber-500/20 border-amber-500 text-amber-500"
+                                                    : "bg-slate-800 border-slate-600 text-slate-500"
+                                            )}
+                                        >
+                                            {selectedCh.mix1Pre ? 'PRE' : 'POST'}
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* MIX 2 YouTube */}
@@ -138,7 +151,20 @@ export default function MultiBusVis() {
                                         onChange={(e) => updateChannel(selectedCh.id, 'mix2', Number(e.target.value))}
                                         className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer mb-2"
                                     />
-                                    <div className="text-pink-500 font-mono text-xs">{selectedCh.mix2}</div>
+                                    <div className="flex gap-2 items-center mb-1">
+                                        <div className="text-pink-500 font-mono text-xs">{selectedCh.mix2}</div>
+                                        <button
+                                            onClick={() => updateChannel(selectedCh.id, 'mix2Pre', !selectedCh.mix2Pre)}
+                                            className={clsx(
+                                                "px-1.5 py-0.5 text-[9px] font-bold rounded border transition-colors",
+                                                selectedCh.mix2Pre
+                                                    ? "bg-amber-500/20 border-amber-500 text-amber-500"
+                                                    : "bg-slate-800 border-slate-600 text-slate-500"
+                                            )}
+                                        >
+                                            {selectedCh.mix2Pre ? 'PRE' : 'POST'}
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* MIX 3 Rec */}
@@ -150,7 +176,20 @@ export default function MultiBusVis() {
                                         onChange={(e) => updateChannel(selectedCh.id, 'mix3', Number(e.target.value))}
                                         className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer mb-2"
                                     />
-                                    <div className="text-cyan-500 font-mono text-xs">{selectedCh.mix3}</div>
+                                    <div className="flex gap-2 items-center mb-1">
+                                        <div className="text-cyan-500 font-mono text-xs">{selectedCh.mix3}</div>
+                                        <button
+                                            onClick={() => updateChannel(selectedCh.id, 'mix3Pre', !selectedCh.mix3Pre)}
+                                            className={clsx(
+                                                "px-1.5 py-0.5 text-[9px] font-bold rounded border transition-colors",
+                                                selectedCh.mix3Pre
+                                                    ? "bg-amber-500/20 border-amber-500 text-amber-500"
+                                                    : "bg-slate-800 border-slate-600 text-slate-500"
+                                            )}
+                                        >
+                                            {selectedCh.mix3Pre ? 'PRE' : 'POST'}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -243,6 +282,14 @@ export default function MultiBusVis() {
                                         selectedBus === 'mix2' ? ch.mix2 :
                                             ch.mix3;
 
+                                    const isPre = selectedBus === 'mix1' ? ch.mix1Pre :
+                                        selectedBus === 'mix2' ? ch.mix2Pre :
+                                            ch.mix3Pre;
+
+                                    const preKey = selectedBus === 'mix1' ? 'mix1Pre' :
+                                        selectedBus === 'mix2' ? 'mix2Pre' :
+                                            'mix3Pre';
+
                                     // Dynamic update handler using Pointer Events
                                     const handlePointer = (e: React.PointerEvent<HTMLDivElement>) => {
                                         // Only handle primary button
@@ -286,7 +333,7 @@ export default function MultiBusVis() {
                                                             selectedBus === 'mix2' ? "bg-pink-500" :
                                                                 "bg-cyan-500"
                                                     )}
-                                                    style={{ height: `${val}% ` }}
+                                                    style={{ height: `${val}%` }}
                                                 />
                                             </div>
 
@@ -297,7 +344,7 @@ export default function MultiBusVis() {
                                                         "absolute left-1/2 -translate-x-1/2 w-8 h-12 bg-gradient-to-b from-slate-600 to-slate-800 rounded shadow-[0_4px_10px_rgba(0,0,0,0.5)] border-t border-slate-500 flex items-center justify-center transition-all duration-75 ease-out",
                                                         "pointer-events-auto cursor-ns-resize hover:from-slate-500 hover:to-slate-700"
                                                     )}
-                                                    style={{ bottom: `${val}% `, transform: `translate(-50 %, 50 %)` }} // Center handle on value
+                                                    style={{ bottom: `${val}%`, transform: `translate(-50%, 50%)` }} // Center handle on value
                                                 >
                                                     <div className="w-6 h-[2px] bg-slate-900/50" />
                                                 </div>
@@ -305,9 +352,25 @@ export default function MultiBusVis() {
 
                                             {/* (Invisible Input Removed - Using Pointer Events) */}
 
-                                            <div className="absolute bottom-1 w-full flex justify-center overflow-visible">
+                                            <div className="absolute bottom-1 w-full flex justify-center overflow-visible z-20">
                                                 <div className="text-[10px] font-bold text-slate-400 whitespace-nowrap origin-center -rotate-45 translate-y-3">{ch.label}</div>
                                             </div>
+
+                                            {/* Pre/Post Toggle (Mini) */}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    updateChannel(ch.id, preKey, !isPre);
+                                                }}
+                                                className={clsx(
+                                                    "absolute -bottom-8 px-1 py-0.5 text-[8px] font-bold rounded border z-20 pointer-events-auto",
+                                                    isPre
+                                                        ? "bg-amber-500/20 border-amber-500 text-amber-500"
+                                                        : "bg-slate-800 border-slate-700 text-slate-600"
+                                                )}
+                                            >
+                                                {isPre ? 'PRE' : 'POST'}
+                                            </button>
 
                                             {/* Floating Value */}
                                             <div className={clsx(
